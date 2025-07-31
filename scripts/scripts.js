@@ -26,6 +26,7 @@ import { initializeConfig, getRootPath, getListOfRootPaths } from './configs.js'
 
 import {
   runExperimentation,
+  showExperimentationRail,
 } from './experiment-loader.js';
 
 const experimentationConfig = {
@@ -366,17 +367,10 @@ async function loadLazy(doc) {
   }
 
   trackHistory();
-
-  // Implement experimentation preview pill
-  if ((getMetadata('experiment')
-    || Object.keys(getAllMetadata('campaign')).length
-    || Object.keys(getAllMetadata('audience')).length)) {
-    // eslint-disable-next-line import/no-relative-packages
-    const { loadLazy: runLazy } = await import('../plugins/experimentation/src/index.js');
-    await runLazy(document, { audiences: AUDIENCES }, pluginContext);
-  }
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
+
+  await showExperimentationRail(doc, experimentationConfig);
 }
 
 /**
