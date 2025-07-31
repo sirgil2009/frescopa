@@ -24,17 +24,10 @@ import { trackHistory } from './commerce.js';
 import initializeDropins from './initializers/index.js';
 import { initializeConfig, getRootPath, getListOfRootPaths } from './configs.js';
 
-import {
-  runExperimentation,
-  showExperimentationRail,
-} from './experiment-loader.js';
-
-const experimentationConfig = {
-  audiences: {
-    mobile: () => window.innerWidth < 600,
-    desktop: () => window.innerWidth >= 600,
-    // define your custom audiences here as needed
-  },
+const AUDIENCES = {
+  mobile: () => window.innerWidth < 600,
+  desktop: () => window.innerWidth >= 600,
+  // define your custom audiences here as needed
 };
 
 /**
@@ -246,7 +239,14 @@ async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
 
-  await runExperimentation(doc, experimentationConfig);
+  // Instrument experimentation plugin
+  if (getMetadata('experiment')
+    || Object.keys(getAllMetadata('campaign')).length
+    || Object.keys(getAllMetadata('audience')).length) {
+    // eslint-disable-next-line import/no-relative-packages
+    const { loadEager: runEager } = await import('../plugins/experimentation/src/index.js');
+    await runEager(document, { audiences: AUDIENCES, overrideMetadataFields: ['placeholders'] }, pluginContext);
+  }
 
   await initializeDropins();
 
@@ -367,7 +367,17 @@ async function loadLazy(doc) {
 
   trackHistory();
 
- await showExperimentationRail(doc, experimentationConfig);
+  // Implement experimentation preview pill
+  if ((getMetadata('experiment')
+    || Object.keys(getAllMetadata('campaign')).length
+    || Object.keys(getAllMetadata('audience')).length)) {
+    // eslint-disable-next-line import/no-relative-packages
+    const { loadLazy: runLazy } = await import('../plugins/experimentation/src/index.js');
+    await runLazy(document, { audiences: AUDIENCES }, pluginContext);
+  }
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadFonts();
+}
 
 /**
  * Loads everything that happens a lot later,
