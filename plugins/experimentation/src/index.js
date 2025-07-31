@@ -978,6 +978,7 @@ async function serveAudience(document, pluginOptions) {
 }
 
 export async function loadEager(document, options = {}) {
+  console.log("xinyi running loadeager")
   const pluginOptions = { ...DEFAULT_OPTIONS, ...options };
   setDebugMode(window.location, pluginOptions);
 
@@ -997,7 +998,7 @@ export async function loadLazy(document, options = {}) {
   if (!isDebugEnabled) {
     return;
   }
-
+console.log("xinyi running loadlazy")
   window.addEventListener('message', async (event) => {
     if (event.data && event.data.type === 'hlx:last-modified-request') {
       const { url } = event.data;
