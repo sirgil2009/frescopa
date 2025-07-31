@@ -24,10 +24,17 @@ import { trackHistory } from './commerce.js';
 import initializeDropins from './initializers/index.js';
 import { initializeConfig, getRootPath, getListOfRootPaths } from './configs.js';
 
-const AUDIENCES = {
-  mobile: () => window.innerWidth < 600,
-  desktop: () => window.innerWidth >= 600,
-  // define your custom audiences here as needed
+import {
+  runExperimentation,
+} from './experiment-loader.js';
+
+const experimentationConfig = {
+  prodHost: 'www.petplace.com',
+  audiences: {
+    mobile: () => window.innerWidth < 600,
+    desktop: () => window.innerWidth >= 600,
+    // define your custom audiences here as needed
+  },
 };
 
 /**
@@ -239,14 +246,7 @@ async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
 
-  // Instrument experimentation plugin
-  if (getMetadata('experiment')
-    || Object.keys(getAllMetadata('campaign')).length
-    || Object.keys(getAllMetadata('audience')).length) {
-    // eslint-disable-next-line import/no-relative-packages
-    const { loadEager: runEager } = await import('../plugins/experimentation/src/index.js');
-    await runEager(document, { audiences: AUDIENCES, overrideMetadataFields: ['placeholders'] }, pluginContext);
-  }
+  await runExperimentation(doc, experimentationConfig);
 
   await initializeDropins();
 
