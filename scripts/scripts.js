@@ -29,6 +29,13 @@ import {
   showExperimentationRail,
 } from './experiment-loader.js';
 
+import {
+  initMartech,
+  martechEager,
+  martechLazy,
+  martechDelayed,
+} from '../plugins/martech/src/index.js';
+
 export const PROD_HOST = 'frescopa.coffee';
 
 const experimentationConfig = {
@@ -249,9 +256,24 @@ async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
 
+  initMartech(
+    {
+      datastreamId: 'cc68fdd3-4db1-432c-adce-288917ddf108',
+      orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
+      defaultConsent: 'in',
+    },
+    {
+      launchUrls: [
+        'https://assets.adobedtm.com/1281f6ff0c59/10bd8e51e424/launch-c7a9cd9019d1-development.min.js',
+      ],
+      personalization: getMetadata('target') || new URLSearchParams(window.location.search).has('target'),
+    },
+  );
   await runExperimentation(doc, experimentationConfig);
 
   await initializeDropins();
+
+  await martechEager();
 
   window.adobeDataLayer = window.adobeDataLayer || [];
 
@@ -361,12 +383,8 @@ async function loadLazy(doc) {
     loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`),
     loadCSS(`${window.hlx.codeBasePath}/styles/article.css`),
     loadFonts(),
-    import('./acdl/adobe-client-data-layer.min.js'),
+    martechLazy(),
   ]);
-
-  if (sessionStorage.getItem('acdl:debug')) {
-    import('./acdl/validate.js');
-  }
 
   trackHistory();
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
@@ -380,8 +398,10 @@ async function loadLazy(doc) {
  * without impacting the user experience.
  */
 function loadDelayed() {
-  window.setTimeout(() => import('./delayed.js'), 3000);
-  // load anything that can be postponed to the latest here
+  window.setTimeout(() => {
+    import('./delayed.js');
+    martechDelayed();
+  }, 3000);
 }
 
 export async function fetchIndex(indexFile, pageSize = 500) {

@@ -33,7 +33,7 @@ async function initAnalytics() {
             websiteName: config['website-name'],
           },
         },
-        { eventForwardingContext: { commerce: true, aep: false } },
+        { eventForwardingContext: { commerce: true, aep: true } },
         {
           shopperContext: {
             shopperId: getUserTokenCookie() ? 'logged-in' : 'guest',
