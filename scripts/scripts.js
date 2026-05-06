@@ -266,7 +266,8 @@ async function loadEager(doc) {
       launchUrls: [
         'https://assets.adobedtm.com/1281f6ff0c59/10bd8e51e424/launch-c7a9cd9019d1-development.min.js',
       ],
-      personalization: getMetadata('target') || new URLSearchParams(window.location.search).has('target'),
+      personalization: true,
+      //personalization: getMetadata('target') || new URLSearchParams(window.location.search).has('target'),
     },
   );
   await runExperimentation(doc, experimentationConfig);
