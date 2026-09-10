@@ -1,7 +1,7 @@
 {
   "public": {
     "default": {
-      "aem" : {
+      "aem": {
         "author": "https://author-p149891-e1546481.adobeaemcloud.com",
         "publish": "https://publish-p149891-e1546481.adobeaemcloud.com"
       },
@@ -33,8 +33,8 @@
       },
       "plugins": {
         "picker": {
-           "rootCategory": "2"
-         }
+          "rootCategory": "2"
+        }
       },
       "target": {
         "enabled": true,
@@ -48,6 +48,37 @@
         ],
         "timeoutMs": 2000
       }
+    },
+    "paths": {
+      "mappings": [
+        "/content/frescopa/:/",
+        "/content/frescopa/en/:/",
+        "/content/frescopa/metadata:/metadata.json",
+        "/content/frescopa/en/placeholders:/placeholders.json",
+        "/content/frescopa/en/locations/locationslist:/locations.json",
+        "/content/frescopa/es:/es",
+        "/content/frescopa/es/:/es/",
+        "/content/frescopa/es/placeholders:/placeholders.json",
+        "/content/frescopa/es/locations/locationslist:/locations.json",
+        "/content/frescopa/fr:/fr",
+        "/content/frescopa/fr/:/fr/",
+        "/content/frescopa/fr/placeholders:/placeholders.json",
+        "/content/frescopa/fr/locations/locationslist:/locations.json",
+        "/content/frescopa/jp:/jp",
+        "/content/frescopa/jp/:/jp/",
+        "/content/frescopa/jp/placeholders:/placeholders.json",
+        "/content/frescopa/jp/locations/locationslist:/locations.json",
+        "/content/frescopa/configuration:/.helix/config.json",
+        "/content/frescopa/headers:/.helix/headers.json",
+        "/content/frescopa/metadata:/metadata.json",
+        "/content/frescopa/configs:/configs.json",
+        "/content/frescopa/configs-dev:/configs-dev.json",
+        "/content/frescopa/configs-stage:/configs-stage.json"
+      ],
+      "includes": [
+        "/content/frescopa/",
+        "/content/dam/frescopa/"
+      ]
     }
   }
 }
